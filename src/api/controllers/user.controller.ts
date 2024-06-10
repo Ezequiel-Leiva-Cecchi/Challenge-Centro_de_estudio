@@ -9,10 +9,14 @@ export const signup = async (req: Request, res: Response) => {
     try {
         // Llama al servicio para registrar un nuevo usuario
         const newUser = await userService.signup(userData);
-        res.status(201).json(newUser); // Devuelve el nuevo usuario creado
+        res.status(201).json(newUser);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Internal server error" }); 
+        if (error === "Email already exists") {
+            res.status(400).json({ message: "Email already in use" });
+        } else {
+            res.status(500).json({ message: "Internal server error" });
+        }
     }
 };
 

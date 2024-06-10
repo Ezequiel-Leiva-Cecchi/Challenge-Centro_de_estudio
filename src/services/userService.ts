@@ -8,17 +8,23 @@ export class UserService {
     // Método para registrar un nuevo usuario
     async signup(user: IUser) {
         try {
+            const existingUser = await userDAO.getUserByEmail(user.email);
+            if (existingUser) {
+                throw new Error("Email already exists");
+            }
+    
             user.password = await hashPassword(user.password);
             const createdUser = await userDAO.createUser(user);
-            const response = await axiosInstance.post('/users/signup');
+            const response = await axiosInstance.post('/users/signup', user);
             console.log(response);
-
+    
             return createdUser;
         } catch (error) {
             console.error(error);
             throw new Error("Error creating user");
         }
     }
+    
 
     // Método para iniciar sesión de usuario
     async login(email: string, password: string) {
