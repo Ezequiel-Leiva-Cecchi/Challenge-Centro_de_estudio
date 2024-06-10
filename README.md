@@ -42,5 +42,5 @@ El proyecto requiere varias variables de entorno para funcionar correctamente. C
 
 ```env
 PORT=5000
-MONGODB_URL=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
+MONGODB_URL=Utilza-tu-conección-de-mongo-aca
+JWT_SECRET=Aca-tu-clave-secreta-de-jsonwebtoken
