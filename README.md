@@ -16,11 +16,11 @@ Este proyecto es una API RESTful para la gestión de estudios y citas médicas, 
 
 1. Clona el repositorio:
     ```bash
-    git clone https://github.com/Ezequiel-Leiva-Cecchi/Challenge-Centro_de_estudio-
+    git clone https://github.com/Ezequiel-Leiva-Cecchi/Challenge-Centro_de_estudio
     ```
 2. Navega al directorio del proyecto:
     ```bash
-    cd Challenge-Centro_de_estudio-
+    cd Challenge-Centro_de_estudio
     ```
 3. Instala las dependencias:
     ```bash
