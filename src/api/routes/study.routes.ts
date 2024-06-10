@@ -1,4 +1,3 @@
-
 import { Router } from 'express';
 import { createStudy, getAllStudies } from '../controllers/study.controller';
 import { requireAuth } from '../middleware/authMiddleware';

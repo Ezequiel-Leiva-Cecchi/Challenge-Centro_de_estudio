@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Request } from 'express';
 
 const axiosInstance = axios.create({
   baseURL: 'http://localhost:5000/api',
@@ -10,13 +11,14 @@ const axiosInstance = axios.create({
 });
 
 // Función para obtener el token de almacenamiento local o algún otro mecanismo de almacenamiento
-const getToken = () => {
-  // Verificar si el token está disponible
-  if (typeof window !== 'undefined' && window.localStorage) {
-    return window.localStorage.getItem('token');
+const getToken = (req: Request) => {
+  // Verificar si el token está disponible en las cookies de la solicitud
+  if (req.cookies && req.cookies.token) {
+    return req.cookies.token;
   }
   return null;
 };
+
 
 // Interceptor para agregar el token de autorización a cada solicitud
 axiosInstance.interceptors.request.use(
