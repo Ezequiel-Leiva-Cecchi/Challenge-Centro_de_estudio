@@ -1,0 +1,53 @@
+openapi: 3.0.1
+info:
+  title: Study API
+  description: API for managing studies
+  version: 1.0.0
+paths:
+  /studies/study:
+    post:
+      summary: Create a new study
+      tags:
+        - Studies
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                patientId:
+                  type: string
+                studyType:
+                  type: string
+                results:
+                  type: string
+                date:
+                  type: string
+                  format: date-time
+      responses:
+        201:
+          description: Study created successfully
+        400:
+          description: Bad request
+  /studies/study/{pId}:
+    get:
+      summary: Get all studies for a patient
+      tags:
+        - Studies
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: pId
+          schema:
+            type: string
+          required: true
+          description: Patient ID
+      responses:
+        200:
+          description: List of all studies
+        404:
+          description: Studies not found
