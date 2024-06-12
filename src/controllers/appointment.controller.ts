@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { AppointmentData } from "../../types/appointmentTypes";
-import { AppointmentService } from "../../services/appointmentService";
+import { AppointmentData } from "../types/appointmentTypes";
+import { AppointmentService } from "../services/appointmentService";
 
 const appointmentService = new AppointmentService();
 

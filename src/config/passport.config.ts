@@ -1,6 +1,6 @@
 import passport from 'passport';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
-import userModel from '../models/usersModel';  
+import userModel from '../api/models/usersModel';  
 import { JWT_SECRET } from '../config/config';  
 import { JwtPayload } from '../types/jwtTypes';
 

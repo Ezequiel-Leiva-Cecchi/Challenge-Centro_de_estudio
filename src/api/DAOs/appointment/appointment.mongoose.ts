@@ -1,5 +1,5 @@
 import appointmentModel from '../../models/appointmentModel';
-import { AppointmentData } from '../../types/appointmentTypes';
+import { AppointmentData } from '../../../types/appointmentTypes';
 
 export class AppointmentMongoose {
     // Método para crear una nueva cita

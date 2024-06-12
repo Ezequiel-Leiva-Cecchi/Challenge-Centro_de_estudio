@@ -1,5 +1,5 @@
 import { StudyData } from '../types/studyTypes';  
-import { studyDAO } from '../DAOs/study/studyDAO'; 
+import { studyDAO } from '../api/DAOs/study/studyDAO'; 
 import axiosInstance from '../config/axios.config';  
 
 // Definición de la clase studyService

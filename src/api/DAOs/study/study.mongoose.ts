@@ -1,5 +1,5 @@
 import Study from '../../models/studyModel';
-import { StudyData } from '../../types/studyTypes';
+import { StudyData } from '../../../types/studyTypes';
 
 export class StudyMongoose {
     // Método para crear un nuevo estudio

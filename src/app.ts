@@ -6,9 +6,9 @@ import swaggerUi from 'swagger-ui-express';
 import { PORT } from './config/config';  
 import mongooseLoader from './loaders/mongoose';  
 import expressLoader from './loaders/express';  
-import userRoutes from './api/routes/user.routes';  
-import appointmentRoutes from './api/routes/appointment.routes';  
-import studyRoutes from './api/routes/study.routes';  
+import userRoutes from './routes/user.routes';  
+import appointmentRoutes from './routes/appointment.routes';  
+import studyRoutes from './routes/study.routes';  
 import { swaggerConfiguration } from './utils/swagger.config';  
 
 dotenv.config();  

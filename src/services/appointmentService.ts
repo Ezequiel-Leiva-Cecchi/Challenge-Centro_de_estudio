@@ -1,5 +1,5 @@
 import { AppointmentData } from '../types/appointmentTypes';  
-import { appointmentDAO } from '../DAOs/appointment/appointmentDAO';  
+import { appointmentDAO } from '../api/DAOs/appointment/appointmentDAO';  
 import axiosInstance from '../config/axios.config';  
 // Definición de la clase AppointmentService
 export class AppointmentService {

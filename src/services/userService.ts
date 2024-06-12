@@ -1,5 +1,5 @@
 import { IUser } from "../types/UserTypes";
-import { userDAO } from "../DAOs/users/userDAO";
+import { userDAO } from "../api/DAOs/users/userDAO";
 import { hashPassword, comparePassword } from "../utils/bcrypt";
 import { generateToken } from "../utils/JWT";
 import axiosInstance from '../config/axios.config';

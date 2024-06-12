@@ -1,4 +1,4 @@
-import { IUser } from "../../types/UserTypes";
+import { IUser } from "../../../types/UserTypes";
 import userModel from "../../models/usersModel";
 
 // Clase para interactuar con la base de datos MongoDB usando Mongoose

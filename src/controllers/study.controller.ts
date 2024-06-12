@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { studyService } from '../../services/studyService';
-import { StudyData } from '../../types/studyTypes';
+import { studyService } from '../services/studyService';
+import { StudyData } from '../types/studyTypes';
 
 const StudyService = new studyService();
 
