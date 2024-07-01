@@ -7,13 +7,13 @@ if (!secret) {
 }
 // Función para generar un token JWT
 export const generateToken = (payload: object, expiresIn: string = '1h'): string => {
-    return jwt.sign(payload, secret, { expiresIn });  // Firma el token con el payload y la clave secreta, y establece el tiempo de expiración
+    return jwt.sign(payload, secret, { expiresIn });  
 };
 
 // Función para verificar un token JWT
 export const verifyToken = (token: string): any => {
     try {
-        return jwt.verify(token, secret);  // Verifica el token con la clave secreta
+        return jwt.verify(token, secret);  
     } catch (error) {
         throw new Error('Invalid token');  
     }

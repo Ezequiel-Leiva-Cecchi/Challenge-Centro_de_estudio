@@ -1,16 +1,16 @@
 import passport from 'passport';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
-import userModel from '../api/models/usersModel';  
-import { JWT_SECRET } from '../config/config';  
+import userModel from '../api/models/usersModel';
+import { JWT_SECRET } from '../config/config';
 import { JwtPayload } from '../types/jwtTypes';
 
 if (!JWT_SECRET) {
-    throw new Error("JWT_SECRET is not defined in the environment variables.");  
+    throw new Error("JWT_SECRET is not defined in the environment variables.");
 }
 
 const options = {
-    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),  
-    secretOrKey: JWT_SECRET,  
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    secretOrKey: JWT_SECRET,
 };
 
 // Configuración de Passport con la estrategia JWT
@@ -18,17 +18,32 @@ const passportConfig = () => {
     passport.use(
         new JwtStrategy(options, async (payload: JwtPayload, done) => {
             try {
-                const user = await userModel.findById(payload.patientId);  
+                console.log('JWT Payload:', payload); 
+                
+                const userId = payload.userId; 
+                console.log('Extracted userId:', userId);
+                
+                if (!userId) {
+                    console.log('No userId found in payload');
+                    return done(null, false);
+                }
+
+                const user = await userModel.findById(userId);
+                console.log('Searching for user with ID:', userId);
+                
                 if (user) {
-                    return done(null, user);  
+                    console.log('User found:', user);
+                    return done(null, user);
                 } else {
-                    return done(null, false); 
+                    console.log('No user found with this ID'); 
+                    return done(null, false);
                 }
             } catch (error) {
-                return done(error, false);  
+                console.error('Error in JWT Strategy:', error); 
+                return done(error, false);
             }
         })
     );
 };
 
-export default passportConfig;  
+export default passportConfig;

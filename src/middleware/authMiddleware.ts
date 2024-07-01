@@ -1,10 +1,19 @@
 import { Request, Response, NextFunction } from 'express';
- 
-// Verificar si el usuario está autenticado
-export const requireAuth = (req: Request, res: Response, next: NextFunction) => {
-    if (req.isAuthenticated()) {
-        return next(); 
-    } else {
-        return res.status(401).json({ message: 'Unauthorized' }); 
+import passport from 'passport'; 
+import { IUser } from '../types/UserTypes'; 
+
+// Middleware de autenticación que verifica si el usuario está autenticado usando JWT
+export const requireAuth = (req: Request, res: Response, next: NextFunction): void => {
+  // Llama a la función de autenticación de Passport con la estrategia 'jwt'
+  passport.authenticate('jwt', { session: false }, (error: Error, user: IUser) => {
+    if (error || !user) {
+      console.error('Authentication Error:', error); 
+      console.log('No user found'); 
+      return res.status(401).json({ message: 'Unauthorized' });
     }
+    console.log('Authenticated User:', user);
+    req.user = user;
+    // Llama a la siguiente función en la cadena de middleware
+    return next();
+  })(req, res, next); 
 };

@@ -4,28 +4,29 @@ import { AppointmentService } from "../services/appointmentService";
 
 const appointmentService = new AppointmentService();
 
-// Controlador para crear una cita
 export const createAppointment = async (req: Request, res: Response) => {
-    try {
-        if (!req.body.fecha || !req.body.tipoEstudio) {
-            return res.status(400).json({ message: 'Missing required fields' });  
-        }
-        const appointmentData: AppointmentData = req.body;
-        const appointment = await appointmentService.createAppointment(appointmentData);  
-        return res.status(201).json(appointment); 
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: 'Internal server error' });  
+  try {
+    console.log('Request Body:', req.body); // Log the request body
+    if (!req.body.date || !req.body.reason) {
+      return res.status(400).json({ message: 'Missing required' });
     }
-}
+    const appointmentData: AppointmentData = req.body;
+    const appointment = await appointmentService.createAppointment(appointmentData);
+    console.log('Created Appointment:', appointment); 
+    return res.status(201).json(appointment);
+  } catch (error) {
+    console.error('Error in createAppointment:', error); 
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
 
-// Controlador para obtener todas las citas
 export const getAllAppointment = async (_req: Request, res: Response) => {
-    try {
-        const appointments = await appointmentService.getAllAppointments();  
-        res.status(200).json(appointments);  
-    } catch (error) {
-        console.error(error);
-        res.status(404).json({ message: 'Appointments not found' }); 
-    }
-}
+  try {
+    const appointments = await appointmentService.getAllAppointments();
+    console.log('All Appointments:', appointments); 
+    res.status(200).json(appointments);
+  } catch (error) {
+    console.error('Error in getAllAppointment:', error); 
+    res.status(404).json({ message: 'Appointments not found' });
+  }
+};

@@ -29,6 +29,6 @@ export const login = async (req: Request, res: Response) => {
         res.json(result); // Devuelve el token de acceso generado
     } catch (error) {
         console.error(error);
-        res.status(401).json({ message: "Unauthorized" }); 
+        res.status(401).json({ message: error }); 
     }
 };
