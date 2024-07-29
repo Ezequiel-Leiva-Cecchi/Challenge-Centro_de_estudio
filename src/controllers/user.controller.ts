@@ -8,8 +8,8 @@ export const signup = async (req: Request, res: Response) => {
     const userData = req.body;
     try {
         // Llama al servicio para registrar un nuevo usuario
-        const newUser = await userService.signup(userData);
-        res.status(201).json(newUser);
+        await userService.signup(userData);
+        res.status(201).json({message:"User register successfully"});
     } catch (error) {
         console.error(error);
         if (error === "Email already exists") {

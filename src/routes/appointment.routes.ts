@@ -8,6 +8,6 @@ const appointmentRouter = Router();
 appointmentRouter.post('/appointment', requireAuth, createAppointment);
 
 // GET /api/appointments - Consulta de Turnos
-appointmentRouter.get('/allAppointment', requireAuth, getAllAppointment);
+appointmentRouter.get('/Appointment/:pId', requireAuth, getAllAppointment);
 
 export default appointmentRouter;

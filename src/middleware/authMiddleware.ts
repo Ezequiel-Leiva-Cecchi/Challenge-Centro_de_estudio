@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import passport from 'passport'; 
-import { IUser } from '../types/UserTypes'; 
+import { IUser } from '../types/userTypes'; 
 
 // Middleware de autenticación que verifica si el usuario está autenticado usando JWT
 export const requireAuth = (req: Request, res: Response, next: NextFunction): void => {

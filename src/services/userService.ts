@@ -1,4 +1,4 @@
-import { IUser } from "../types/UserTypes";
+import { IUser } from "../types/userTypes";
 import { userDAO } from "../api/DAOs/users/userDAO";
 import { hashPassword, comparePassword } from "../utils/bcrypt";
 import { generateToken } from "../utils/JWT";
