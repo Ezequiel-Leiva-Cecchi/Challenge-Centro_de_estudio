@@ -1,0 +1,243 @@
+openapi: 3.0.1
+info:
+  title: Appointment API
+  description: API for managing appointments, studies, and users
+  version: 1.0.0
+paths:
+  /appointments/appointment:
+    post:
+      summary: Create a new appointment
+      tags:
+        - Appointments
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                patientId:
+                  type: string
+                doctorId:
+                  type: string
+                date:
+                  type: string
+                  format: date-time
+                reason:
+                  type: string
+            example:
+              patientId: "64d5d2c4f4a110ab567bcdf0"
+              doctorId: "64d5d2c4f4a110ab567bcdf1"
+              date: "2024-08-11T10:00:00Z"
+              reason: "Routine check-up"
+      responses:
+        201:
+          description: Appointment created successfully
+          content:
+            application/json:
+              example:
+                appointmentId: "64d5d2c4f4a110ab567bcdf2"
+                patientId: "64d5d2c4f4a110ab567bcdf0"
+                doctorId: "64d5d2c4f4a110ab567bcdf1"
+                date: "2024-08-11T10:00:00Z"
+                reason: "Routine check-up"
+        400:
+          description: Bad request
+
+  /appointments/appointment/{pId}:
+    get:
+      summary: Get all appointments for a patient
+      tags:
+        - Appointments
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: pId
+          schema:
+            type: string
+          required: true
+          description: Patient ID
+      responses:
+        200:
+          description: List of all appointments for a patient
+          content:
+            application/json:
+              example:
+                - appointmentId: "64d5d2c4f4a110ab567bcdf2"
+                  patientId: "64d5d2c4f4a110ab567bcdf0"
+                  doctorId: "64d5d2c4f4a110ab567bcdf1"
+                  date: "2024-08-11T10:00:00Z"
+                  reason: "Routine check-up"
+                - appointmentId: "64d5d2c4f4a110ab567bcdf3"
+                  patientId: "64d5d2c4f4a110ab567bcdf0"
+                  doctorId: "64d5d2c4f4a110ab567bcdf4"
+                  date: "2024-08-12T14:30:00Z"
+                  reason: "Follow-up"
+        404:
+          description: Appointments not found
+
+  /studies/study:
+    post:
+      summary: Create a new study
+      tags:
+        - Studies
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                patientId:
+                  type: string
+                studyType:
+                  type: string
+                results:
+                  type: string
+                date:
+                  type: string
+                  format: date-time
+            example:
+              patientId: "64d5d2c4f4a110ab567bcdf0"
+              studyType: "Blood Test"
+              results: "Hemoglobin levels are normal."
+              date: "2024-08-10T08:30:00Z"
+      responses:
+        201:
+          description: Study created successfully
+          content:
+            application/json:
+              example:
+                studyId: "64d5d2c4f4a110ab567bcdf3"
+                patientId: "64d5d2c4f4a110ab567bcdf0"
+                studyType: "Blood Test"
+                results: "Hemoglobin levels are normal."
+                date: "2024-08-10T08:30:00Z"
+        400:
+          description: Bad request
+
+  /studies/study/{pId}:
+    get:
+      summary: Get all studies for a patient
+      tags:
+        - Studies
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: pId
+          schema:
+            type: string
+          required: true
+          description: Patient ID
+      responses:
+        200:
+          description: List of all studies for a patient
+          content:
+            application/json:
+              example:
+                - studyId: "64d5d2c4f4a110ab567bcdf3"
+                  patientId: "64d5d2c4f4a110ab567bcdf0"
+                  studyType: "Blood Test"
+                  results: "Hemoglobin levels are normal."
+                  date: "2024-08-10T08:30:00Z"
+                - studyId: "64d5d2c4f4a110ab567bcdf4"
+                  patientId: "64d5d2c4f4a110ab567bcdf0"
+                  studyType: "X-Ray"
+                  results: "No fractures detected."
+                  date: "2024-08-09T12:00:00Z"
+        404:
+          description: Studies not found
+
+  /users/signup:
+    post:
+      summary: Register a new user
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                phone:
+                  type: number
+                email:
+                  type: string
+                password:
+                  type: string
+                street:
+                  type: object
+                  properties:
+                    number:
+                      type: number
+                    postalCode:
+                      type: number
+                    floor:
+                      type: number
+                    apartment:
+                      type: string
+            example:
+              name: "Jane Doe"
+              phone: 1234567890
+              email: "janedoe@example.com"
+              password: "securepassword"
+              street:
+                number: 123
+                postalCode: 45678
+                floor: 2
+                apartment: "B"
+      responses:
+        201:
+          description: User created successfully
+          content:
+            application/json:
+              example:
+                userId: "64d5d2c4f4a110ab567bcdf4"
+                name: "Jane Doe"
+                phone: 1234567890
+                email: "janedoe@example.com"
+                street:
+                  number: 123
+                  postalCode: 45678
+                  floor: 2
+                  apartment: "B"
+        400:
+          description: Bad request
+
+  /users/login:
+    post:
+      summary: Login a user
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+            example:
+              email: "janedoe@example.com"
+              password: "securepassword"
+      responses:
+        200:
+          description: Login successful
+          content:
+            application/json:
+              example:
+                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        401:
+          description: Unauthorized

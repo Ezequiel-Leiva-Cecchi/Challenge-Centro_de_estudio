@@ -26,5 +26,5 @@ export const swaggerConfiguration = {
             },
         ],
     },
-    apis: ['./docs/*.yaml']
+    apis: ['./docs/documentacion.yaml']
 };
