@@ -64,11 +64,11 @@ Estudios Médicos
 
 ## Estructura del proyecto
 
-|src
+src/
 |__api
 |   |__DAOs
 |   |   |___appointment
-|   |  |   |__appointment.mongoose.ts
+|   |   |   |__appointment.mongoose.ts
 |   |   |   |__appointmentDAO.ts
 |   |   |
 |   |   |___study
