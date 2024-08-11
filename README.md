@@ -47,6 +47,9 @@ JWT_SECRET=***
 ## Rutas de la API
 A continuación se describen las principales rutas de la API:
 
+Ruta de la documetacion
+`http://localhost:5000/api-docs`
+
 Usuarios
 `POST /api/users/register` - Registro de un nuevo usuario.
 
