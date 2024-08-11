@@ -26,9 +26,9 @@ export const login = async (req: Request, res: Response) => {
     try {
         // Llama al servicio para iniciar sesión con el email y contraseña proporcionados
         const result = await userService.login(email, password);
-        res.json(result); // Devuelve el token de acceso generado
+        res.json({ token: result.token }); // Devuelve solo el token de acceso generado en formato JSON
     } catch (error) {
         console.error(error);
-        res.status(401).json({ message: error }); 
+        res.status(401).json({ message: error });
     }
 };

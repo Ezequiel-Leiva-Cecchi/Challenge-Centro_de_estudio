@@ -14,7 +14,6 @@ export const createAppointment = async (req: Request, res: Response) => {
     const appointment = await appointmentService.createAppointment(
       appointmentData
     );
-    console.log("Created Appointment:", appointment);
     return res.status(201).json(appointment);
   } catch (error) {
     console.error("Error in createAppointment:", error);

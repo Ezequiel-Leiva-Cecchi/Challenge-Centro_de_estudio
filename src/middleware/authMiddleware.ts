@@ -11,7 +11,7 @@ export const requireAuth = (req: Request, res: Response, next: NextFunction): vo
       console.log('No user found'); 
       return res.status(401).json({ message: 'Unauthorized' });
     }
-    console.log('Authenticated User:', user);
+
     req.user = user;
     // Llama a la siguiente función en la cadena de middleware
     return next();

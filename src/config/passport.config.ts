@@ -17,11 +17,8 @@ const options = {
 const passportConfig = () => {
     passport.use(
         new JwtStrategy(options, async (payload: JwtPayload, done) => {
-            try {
-                console.log('JWT Payload:', payload); 
-                
+            try { 
                 const userId = payload.userId; 
-                console.log('Extracted userId:', userId);
                 
                 if (!userId) {
                     console.log('No userId found in payload');
@@ -29,10 +26,8 @@ const passportConfig = () => {
                 }
 
                 const user = await userModel.findById(userId);
-                console.log('Searching for user with ID:', userId);
                 
                 if (user) {
-                    console.log('User found:', user);
                     return done(null, user);
                 } else {
                     console.log('No user found with this ID'); 
