@@ -1,32 +1,23 @@
-import { Application } from 'express';
-import bodyParser from 'body-parser';
-import morgan from 'morgan';
-import cors from 'cors';
-import helmet from 'helmet';
 import compression from 'compression';
+import cors from 'cors';
+import express, { Application } from 'express';
+import helmet from 'helmet';
+import morgan from 'morgan';
 import passport from 'passport';
+import { CORS_ORIGIN, NODE_ENV } from '../config/config';
 import passportConfig from '../config/passport.config';
 
-const expressLoader = async ({ app }: { app: Application }) => {
-    // Middleware para procesar datos JSON
-    app.use(bodyParser.json());
+const expressLoader = ({ app }: { app: Application }): void => {
+  app.disable('x-powered-by');
+  app.use(express.json({ limit: '1mb' }));
+  app.use(express.urlencoded({ extended: false }));
+  app.use(morgan(NODE_ENV === 'production' ? 'combined' : 'dev'));
+  app.use(cors({ origin: CORS_ORIGIN === '*' ? '*' : CORS_ORIGIN.split(',').map((origin) => origin.trim()) }));
+  app.use(helmet());
+  app.use(compression());
 
-    // Middleware para registrar solicitudes en la conspassport: passport.PassportStaticola 
-    app.use(morgan('dev'));
-
-    // Middleware para permitir solicitudes de dominios diferentes 
-    app.use(cors());
-
-    // Middleware para agregar encabezados de seguridad 
-    app.use(helmet());
-
-    // Middleware para comprimir las respuestas 
-    app.use(compression());
-
-    // Inicializar Passport.js
-    app.use(passport.initialize());
-    // Configurar Passport.js con la estrategia JWT
-    passportConfig();
+  passportConfig();
+  app.use(passport.initialize());
 };
 
 export default expressLoader;

@@ -1,12 +1,10 @@
 import { Router } from 'express';
-import { signup, login } from '../controllers/user.controller';
+import { login, signup } from '../controllers/user.controller';
 
 const userRouter = Router();
 
-// POST /api/user- Registro de usuario 
-userRouter.post('/signup', signup);
-
-// POST /api/user- Incio de sessión
+userRouter.post('/register', signup);
+userRouter.post('/signup', signup); // Alias legado
 userRouter.post('/login', login);
 
 export default userRouter;

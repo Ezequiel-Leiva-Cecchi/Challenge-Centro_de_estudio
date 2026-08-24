@@ -1,33 +1,69 @@
-import { Request, Response } from "express";
-import { AppointmentData } from "../types/appointmentTypes";
-import { AppointmentService } from "../services/appointmentService";
+import { NextFunction, Request, Response } from 'express';
+import { AppointmentData } from '../types/appointmentTypes';
+import { AppointmentService } from '../services/appointmentService';
+import { isValidObjectId, toDate, toTrimmedString } from '../utils/validation';
 
 const appointmentService = new AppointmentService();
 
-export const createAppointment = async (req: Request, res: Response) => {
+export const createAppointment = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   try {
-    console.log("Request Body:", req.body);
-    if (!req.body.date || !req.body.reason) {
-      return res.status(400).json({ message: "Missing required" });
+    const body = (req.body ?? {}) as Record<string, unknown>;
+    const patientId = toTrimmedString(body.patientId);
+    const doctorId = toTrimmedString(body.doctorId);
+    const reason = toTrimmedString(body.reason);
+    const date = toDate(body.date);
+
+    if (!isValidObjectId(patientId) || !isValidObjectId(doctorId) || !reason || !date) {
+      res.status(400).json({
+        error: {
+          code: 'INVALID_APPOINTMENT_DATA',
+          message: 'patientId, doctorId, date y reason son obligatorios y deben tener un formato válido.',
+        },
+      });
+      return;
     }
-    const appointmentData: AppointmentData = req.body;
-    const appointment = await appointmentService.createAppointment(
-      appointmentData
-    );
-    return res.status(201).json(appointment);
+
+    const appointmentData: AppointmentData = {
+      patientId,
+      doctorId,
+      date,
+      reason,
+    };
+
+    const appointment = await appointmentService.createAppointment(appointmentData);
+    res.status(201).json({ data: { appointment } });
   } catch (error) {
-    console.error("Error in createAppointment:", error);
-    return res.status(500).json({ message: "Internal server error" });
+    next(error);
   }
 };
 
-export const getAllAppointment = async (_req: Request, res: Response) => {
+export const getAllAppointment = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   try {
-    const appointments = await appointmentService.getAllAppointments();
-    console.log("All Appointments:", appointments);
-    res.status(200).json(appointments);
+    const patientId = req.params.pId;
+    if (!isValidObjectId(patientId)) {
+      res.status(400).json({
+        error: {
+          code: 'INVALID_PATIENT_ID',
+          message: 'El ID del paciente no es válido.',
+        },
+      });
+      return;
+    }
+
+    const appointments = await appointmentService.getAppointmentsByPatient(patientId);
+    res.status(200).json({
+      data: { appointments },
+      meta: { total: appointments.length },
+    });
   } catch (error) {
-    console.error("Error in getAllAppointment:", error);
-    res.status(404).json({ message: "Appointments not found" });
+    next(error);
   }
 };

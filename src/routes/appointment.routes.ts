@@ -4,10 +4,10 @@ import { requireAuth } from '../middleware/authMiddleware';
 
 const appointmentRouter = Router();
 
-// POST /api/appointments - Creación de Turnos
-appointmentRouter.post('/appointment', requireAuth, createAppointment);
+appointmentRouter.post('/', requireAuth, createAppointment);
+appointmentRouter.get('/patient/:pId', requireAuth, getAllAppointment);
 
-// GET /api/appointments - Consulta de Turnos
-appointmentRouter.get('/appointment/:pId', requireAuth, getAllAppointment);
+appointmentRouter.post('/appointment', requireAuth, createAppointment); // Alias legado
+appointmentRouter.get('/appointment/:pId', requireAuth, getAllAppointment); // Alias legado
 
 export default appointmentRouter;

@@ -4,11 +4,10 @@ import { requireAuth } from '../middleware/authMiddleware';
 
 const studyRouter = Router();
 
-// POST /api/studies/- crear estudio
+studyRouter.post('/', requireAuth, createStudy);
+studyRouter.get('/patient/:pId', requireAuth, getAllStudies);
 
-studyRouter.post('/study', requireAuth, createStudy);
-
-// GET /api/studies/ - Obtener estudio con el id del paciente 
-studyRouter.get('/study/:pId', requireAuth, getAllStudies);
+studyRouter.post('/study', requireAuth, createStudy); // Alias legado
+studyRouter.get('/study/:pId', requireAuth, getAllStudies); // Alias legado
 
 export default studyRouter;

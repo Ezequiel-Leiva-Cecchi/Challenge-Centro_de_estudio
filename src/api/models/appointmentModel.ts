@@ -1,24 +1,36 @@
-import mongoose from "mongoose";
+import { Schema, model } from 'mongoose';
 
-const appointmentSchema = new mongoose.Schema({
+const appointmentSchema = new Schema(
+  {
     patientId: {
-        type: String,
-        required: true
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+      index: true,
     },
     doctorId: {
-        type: String,
-        required: true
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+      index: true,
     },
     date: {
-        type: Date,
-        required: true
+      type: Date,
+      required: true,
+      index: true,
     },
     reason: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
+      trim: true,
+      maxlength: 500,
     },
-}, { timestamps: true });
+  },
+  { timestamps: true },
+);
 
-const appointmentModel = mongoose.model('Appointment', appointmentSchema);
+appointmentSchema.index({ patientId: 1, date: -1 });
+appointmentSchema.index({ doctorId: 1, date: -1 });
 
+const appointmentModel = model('Appointment', appointmentSchema);
 export default appointmentModel;

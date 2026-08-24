@@ -1,10 +1,19 @@
 {
   "name": "challenge-sistema-de-gestion-centro-de-estudio-medico",
   "version": "1.0.0",
-  "main": "index.ts",
+  "description": "CentroMed API: gestión de usuarios, turnos y estudios con Node.js, TypeScript, Express y MongoDB.",
+  "main": "build/app.js",
+  "scripts": {
+    "dev": "nodemon --watch src --ext ts --exec ts-node src/app.ts",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "start": "node build/app.js",
+    "test": "npm run typecheck"
+  },
+  "engines": {
+    "node": ">=20"
+  },
   "devDependencies": {
-    "@types/node": "^20.14.2",
-    "@types/nodemailer": "^6.4.15",
     "@types/bcrypt": "^5.0.2",
     "@types/compression": "^1.7.5",
     "@types/cors": "^2.8.17",
@@ -20,12 +29,10 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
   },
-  "scripts": {
-    "tsc": "tsc",
-    "start": "nodemon src/app.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "dependencies": {
+    "@types/mongoose": "^5.11.97",
+    "@types/node": "^20.14.2",
+    "@types/nodemailer": "^6.4.15",
     "axios": "^1.7.2",
     "bcrypt": "^5.1.1",
     "compression": "^1.7.4",
@@ -43,8 +50,7 @@
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": ""
+  "keywords": ["node", "typescript", "express", "mongodb", "medical-api", "rest-api"],
+  "author": "Ezequiel Leiva Cecchi",
+  "license": "ISC"
 }

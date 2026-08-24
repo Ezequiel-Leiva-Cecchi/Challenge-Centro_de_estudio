@@ -1,14 +1,64 @@
-openapi: 3.0.1
-info:
-  title: Appointment API
-  description: API for managing appointments, studies, and users
-  version: 1.0.0
 paths:
-  /appointments/appointment:
+  /health:
+    get:
+      tags: [Sistema]
+      summary: Estado de la API y MongoDB
+      responses:
+        '200':
+          description: Servicio operativo
+        '503':
+          description: API activa pero base de datos desconectada
+
+  /api/users/register:
     post:
-      summary: Create a new appointment
-      tags:
-        - Appointments
+      tags: [Usuarios]
+      summary: Registrar un usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Usuario registrado
+        '400':
+          description: Datos inválidos
+        '409':
+          description: Email ya registrado
+
+  /api/users/login:
+    post:
+      tags: [Usuarios]
+      summary: Iniciar sesión
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login correcto
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                      user:
+                        $ref: '#/components/schemas/User'
+        '401':
+          description: Credenciales inválidas
+
+  /api/appointments:
+    post:
+      tags: [Turnos]
+      summary: Crear un turno
       security:
         - bearerAuth: []
       requestBody:
@@ -16,74 +66,40 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                patientId:
-                  type: string
-                doctorId:
-                  type: string
-                date:
-                  type: string
-                  format: date-time
-                reason:
-                  type: string
-            example:
-              patientId: "64d5d2c4f4a110ab567bcdf0"
-              doctorId: "64d5d2c4f4a110ab567bcdf1"
-              date: "2024-08-11T10:00:00Z"
-              reason: "Routine check-up"
+              $ref: '#/components/schemas/AppointmentRequest'
       responses:
-        201:
-          description: Appointment created successfully
-          content:
-            application/json:
-              example:
-                appointmentId: "64d5d2c4f4a110ab567bcdf2"
-                patientId: "64d5d2c4f4a110ab567bcdf0"
-                doctorId: "64d5d2c4f4a110ab567bcdf1"
-                date: "2024-08-11T10:00:00Z"
-                reason: "Routine check-up"
-        400:
-          description: Bad request
+        '201':
+          description: Turno creado
+        '400':
+          description: Datos inválidos
+        '401':
+          description: Token faltante o inválido
 
-  /appointments/appointment/{pId}:
+  /api/appointments/patient/{pId}:
     get:
-      summary: Get all appointments for a patient
-      tags:
-        - Appointments
+      tags: [Turnos]
+      summary: Obtener turnos de un paciente
       security:
         - bearerAuth: []
       parameters:
         - in: path
           name: pId
+          required: true
           schema:
             type: string
-          required: true
-          description: Patient ID
+          description: ObjectId de MongoDB del paciente
       responses:
-        200:
-          description: List of all appointments for a patient
-          content:
-            application/json:
-              example:
-                - appointmentId: "64d5d2c4f4a110ab567bcdf2"
-                  patientId: "64d5d2c4f4a110ab567bcdf0"
-                  doctorId: "64d5d2c4f4a110ab567bcdf1"
-                  date: "2024-08-11T10:00:00Z"
-                  reason: "Routine check-up"
-                - appointmentId: "64d5d2c4f4a110ab567bcdf3"
-                  patientId: "64d5d2c4f4a110ab567bcdf0"
-                  doctorId: "64d5d2c4f4a110ab567bcdf4"
-                  date: "2024-08-12T14:30:00Z"
-                  reason: "Follow-up"
-        404:
-          description: Appointments not found
+        '200':
+          description: Listado de turnos
+        '400':
+          description: ID de paciente inválido
+        '401':
+          description: Token faltante o inválido
 
-  /studies/study:
+  /api/studies:
     post:
-      summary: Create a new study
-      tags:
-        - Studies
+      tags: [Estudios]
+      summary: Registrar un estudio
       security:
         - bearerAuth: []
       requestBody:
@@ -91,153 +107,143 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                patientId:
-                  type: string
-                studyType:
-                  type: string
-                results:
-                  type: string
-                date:
-                  type: string
-                  format: date-time
-            example:
-              patientId: "64d5d2c4f4a110ab567bcdf0"
-              studyType: "Blood Test"
-              results: "Hemoglobin levels are normal."
-              date: "2024-08-10T08:30:00Z"
+              $ref: '#/components/schemas/StudyRequest'
       responses:
-        201:
-          description: Study created successfully
-          content:
-            application/json:
-              example:
-                studyId: "64d5d2c4f4a110ab567bcdf3"
-                patientId: "64d5d2c4f4a110ab567bcdf0"
-                studyType: "Blood Test"
-                results: "Hemoglobin levels are normal."
-                date: "2024-08-10T08:30:00Z"
-        400:
-          description: Bad request
+        '201':
+          description: Estudio creado
+        '400':
+          description: Datos inválidos
+        '401':
+          description: Token faltante o inválido
 
-  /studies/study/{pId}:
+  /api/studies/patient/{pId}:
     get:
-      summary: Get all studies for a patient
-      tags:
-        - Studies
+      tags: [Estudios]
+      summary: Obtener estudios de un paciente
       security:
         - bearerAuth: []
       parameters:
         - in: path
           name: pId
+          required: true
           schema:
             type: string
-          required: true
-          description: Patient ID
+          description: ObjectId de MongoDB del paciente
       responses:
-        200:
-          description: List of all studies for a patient
-          content:
-            application/json:
-              example:
-                - studyId: "64d5d2c4f4a110ab567bcdf3"
-                  patientId: "64d5d2c4f4a110ab567bcdf0"
-                  studyType: "Blood Test"
-                  results: "Hemoglobin levels are normal."
-                  date: "2024-08-10T08:30:00Z"
-                - studyId: "64d5d2c4f4a110ab567bcdf4"
-                  patientId: "64d5d2c4f4a110ab567bcdf0"
-                  studyType: "X-Ray"
-                  results: "No fractures detected."
-                  date: "2024-08-09T12:00:00Z"
-        404:
-          description: Studies not found
+        '200':
+          description: Listado de estudios
+        '400':
+          description: ID de paciente inválido
+        '401':
+          description: Token faltante o inválido
 
-  /users/signup:
-    post:
-      summary: Register a new user
-      tags:
-        - Users
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                phone:
-                  type: number
-                email:
-                  type: string
-                password:
-                  type: string
-                street:
-                  type: object
-                  properties:
-                    number:
-                      type: number
-                    postalCode:
-                      type: number
-                    floor:
-                      type: number
-                    apartment:
-                      type: string
-            example:
-              name: "Jane Doe"
-              phone: 1234567890
-              email: "janedoe@example.com"
-              password: "securepassword"
-              street:
-                number: 123
-                postalCode: 45678
-                floor: 2
-                apartment: "B"
-      responses:
-        201:
-          description: User created successfully
-          content:
-            application/json:
-              example:
-                userId: "64d5d2c4f4a110ab567bcdf4"
-                name: "Jane Doe"
-                phone: 1234567890
-                email: "janedoe@example.com"
-                street:
-                  number: 123
-                  postalCode: 45678
-                  floor: 2
-                  apartment: "B"
-        400:
-          description: Bad request
+components:
+  schemas:
+    Address:
+      type: object
+      required: [number, postalCode]
+      properties:
+        number:
+          type: string
+          example: '1234'
+        postalCode:
+          type: string
+          example: C1234ABC
+        floor:
+          type: string
+          example: '4'
+        apartment:
+          type: string
+          example: B
 
-  /users/login:
-    post:
-      summary: Login a user
-      tags:
-        - Users
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                password:
-                  type: string
-            example:
-              email: "janedoe@example.com"
-              password: "securepassword"
-      responses:
-        200:
-          description: Login successful
-          content:
-            application/json:
-              example:
-                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-        401:
-          description: Unauthorized
+    RegisterRequest:
+      type: object
+      required: [name, phone, email, password, passwordConfirm, street]
+      properties:
+        name:
+          type: string
+          example: Juan Pérez
+        phone:
+          type: string
+          example: '+54 11 5555-5555'
+        email:
+          type: string
+          format: email
+          example: juan@example.com
+        password:
+          type: string
+          format: password
+          minLength: 8
+          example: clave-segura-123
+        passwordConfirm:
+          type: string
+          format: password
+          example: clave-segura-123
+        street:
+          $ref: '#/components/schemas/Address'
+
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+          format: email
+        street:
+          $ref: '#/components/schemas/Address'
+        createdAt:
+          type: string
+          format: date-time
+
+    AppointmentRequest:
+      type: object
+      required: [patientId, doctorId, date, reason]
+      properties:
+        patientId:
+          type: string
+          example: 665f1b62e4825e21f4a12345
+        doctorId:
+          type: string
+          example: 665f1b62e4825e21f4a67890
+        date:
+          type: string
+          format: date-time
+          example: '2026-09-01T14:30:00.000Z'
+        reason:
+          type: string
+          maxLength: 500
+          example: Consulta de seguimiento
+
+    StudyRequest:
+      type: object
+      required: [patientId, studyType, results, date]
+      properties:
+        patientId:
+          type: string
+          example: 665f1b62e4825e21f4a12345
+        studyType:
+          type: string
+          example: Resonancia magnética
+        results:
+          type: string
+          example: Informe del estudio
+        date:
+          type: string
+          format: date-time
+          example: '2026-08-20T12:00:00.000Z'
