@@ -27,6 +27,12 @@ const userSchema = new Schema(
       required: true,
       select: false,
     },
+    role: {
+      type: String,
+      enum: ['patient', 'doctor', 'admin'],
+      default: 'patient',
+      index: true,
+    },
     street: {
       number: { type: String, required: true, trim: true },
       postalCode: { type: String, required: true, trim: true },

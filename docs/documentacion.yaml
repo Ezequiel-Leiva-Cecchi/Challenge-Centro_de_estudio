@@ -12,7 +12,8 @@ paths:
   /api/users/register:
     post:
       tags: [Usuarios]
-      summary: Registrar un usuario
+      summary: Registrar un paciente
+      description: El registro público siempre crea usuarios con rol patient.
       requestBody:
         required: true
         content:
@@ -59,6 +60,7 @@ paths:
     post:
       tags: [Turnos]
       summary: Crear un turno
+      description: Un paciente sólo puede crear turnos para su propio patientId. Doctor y admin pueden operar sobre otros pacientes.
       security:
         - bearerAuth: []
       requestBody:
@@ -74,11 +76,14 @@ paths:
           description: Datos inválidos
         '401':
           description: Token faltante o inválido
+        '403':
+          description: Sin permisos sobre el paciente indicado
 
   /api/appointments/patient/{pId}:
     get:
       tags: [Turnos]
       summary: Obtener turnos de un paciente
+      description: El paciente puede ver sus propios turnos; doctor y admin pueden consultar otros pacientes.
       security:
         - bearerAuth: []
       parameters:
@@ -95,11 +100,14 @@ paths:
           description: ID de paciente inválido
         '401':
           description: Token faltante o inválido
+        '403':
+          description: Sin permisos para consultar el paciente
 
   /api/studies:
     post:
       tags: [Estudios]
       summary: Registrar un estudio
+      description: Requiere rol doctor o admin.
       security:
         - bearerAuth: []
       requestBody:
@@ -115,11 +123,14 @@ paths:
           description: Datos inválidos
         '401':
           description: Token faltante o inválido
+        '403':
+          description: Rol sin permisos para registrar estudios
 
   /api/studies/patient/{pId}:
     get:
       tags: [Estudios]
       summary: Obtener estudios de un paciente
+      description: El paciente puede ver sus propios estudios; doctor y admin pueden consultar otros pacientes.
       security:
         - bearerAuth: []
       parameters:
@@ -136,6 +147,8 @@ paths:
           description: ID de paciente inválido
         '401':
           description: Token faltante o inválido
+        '403':
+          description: Sin permisos para consultar el paciente
 
 components:
   schemas:
@@ -205,6 +218,9 @@ components:
         email:
           type: string
           format: email
+        role:
+          type: string
+          enum: [patient, doctor, admin]
         street:
           $ref: '#/components/schemas/Address'
         createdAt:
