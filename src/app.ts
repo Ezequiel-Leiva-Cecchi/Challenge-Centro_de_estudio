@@ -9,12 +9,18 @@ import userRoutes from './routes/user.routes';
 import appointmentRoutes from './routes/appointment.routes';
 import studyRoutes from './routes/study.routes';
 import { swaggerConfiguration } from './utils/swagger.config';
+import { landingPage, swaggerCustomCss } from './utils/docsTheme';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 
 const app: Application = express();
 expressLoader({ app });
 
 const specs = swaggerJsdoc(swaggerConfiguration);
+
+app.get('/', (_req, res) => {
+  res.removeHeader('Content-Security-Policy');
+  res.status(200).type('html').send(landingPage);
+});
 
 app.get('/health', (_req, res) => {
   const databaseConnected = mongoose.connection.readyState === 1;
@@ -46,7 +52,10 @@ app.use(
     next();
   },
   swaggerUi.serve,
-  swaggerUi.setup(specs, { customSiteTitle: 'CentroMed API Docs' }),
+  swaggerUi.setup(specs, {
+    customSiteTitle: 'CentroMed API · Documentación',
+    customCss: swaggerCustomCss,
+  }),
 );
 
 app.use(notFoundHandler);
